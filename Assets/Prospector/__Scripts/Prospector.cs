@@ -87,8 +87,36 @@ public class Prospector : MonoBehaviour {
 			tableau.Add(cp);
 		}
 
+		foreach(CardProspector tCP in tableau){
+			foreach(int hid in tCP.SlotDef.hiddenBy){
+				cp = FindCardByLayoutID(hid);
+				tCP.hiddenBy.Add(cp);
+			}
+		}
+
 		MoveToTarget(Draw());
 		UpdateDrawPile();
+	}
+
+	CardProspector FindCardByLayoutID(int layoutID){
+		foreach(CardProspector tCP in tableau){
+			if(tCP.layoutID == layoutID){
+				return(tCP);
+			}
+		}
+		return(null);
+	}
+
+	void SetTableauFaces(){
+		foreach(CardProspector cd in tableau){
+			bool faceUp = true;
+			foreach(CardProspector cover in cd.hiddenBy){
+				if(cover.state == eCardState.tableau){
+					faceUp = false;
+				}
+			}
+			cd.faceUp = faceUp;
+		}
 	}
 
 
@@ -168,8 +196,37 @@ public class Prospector : MonoBehaviour {
 
 			tableau.Remove(cd);
 			MoveToTarget(cd);
+			SetTableauFaces();
 			break;
 		}
+		CheckForGameOver();
+	}
+
+	void CheckForGameOver(){
+		if(tableau.Count == 0){
+			GameOver(true);
+			return;
+		}
+
+		if(drawPile.Count > 0){
+			return;
+		}
+
+		foreach(CardProspector cd in tableau){
+			if(AdjacentRank(cd, target)){
+				return;
+			}
+		}
+		GameOver(false);
+	}
+
+	void GameOver(bool won){
+		if(won){
+			print("Game Over. You won! :)");
+		}else{
+			print("Game Over. You Lost. :(");
+		}
+		SceneManager.LoadScene("__Prospector_Scene_0");
 	}
 
 	public bool AdjacentRank(CardProspector c0, CardProspector c1){
