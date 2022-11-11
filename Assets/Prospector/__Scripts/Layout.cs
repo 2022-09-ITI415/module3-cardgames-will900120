@@ -8,7 +8,7 @@ public class SlotDef{
     public float x;
     public float y;
     public bool faceUp = false;
-    public string layerName = "Default";
+    public string layerName;
     public int layerID = 0;
     public int id;
     public List<int> hiddenBy = new List<int>();
@@ -27,7 +27,7 @@ public class Layout : MonoBehaviour
     public SlotDef discardPile;
 
     public string[] sortingLayerNames = new string[]{"Row0", "Row1", 
-    "Row2", "Row3", "Discard", "Draw"};
+    "Row2", "Row3","Row4","Row5","Row6", "Discard", "Draw"};
 
     public void ReadLayout(string xmlText){
         xmlr = new PT_XMLReader();
