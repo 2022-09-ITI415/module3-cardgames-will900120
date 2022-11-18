@@ -46,39 +46,35 @@ public class ScoreManager : MonoBehaviour
 
     void Event(eScoreEvent evt){
         switch(evt){
-            case eScoreEvent.draw:
-            case eScoreEvent.gameWin:
-            case eScoreEvent.gameLoss:
-            chain = 0;
-            score += scoreRun;
-            scoreRun = 0;
-            break;
-
             case eScoreEvent.mine:
-            chain++;
-            scoreRun += chain;
-            break;
-        }
-        switch(evt){
+                score -= 1;
+                break;
+            case eScoreEvent.draw:
+                break;
+
             case eScoreEvent.gameWin:
-            SCORE_FROM_PREV_ROUND = score;
-            print("You won this round! Round score: "+score);
-            break;
+                SCORE_FROM_PREV_ROUND = score;
+                print("You won this round! Round score: "+score);
+                break;
 
             case eScoreEvent.gameLoss:
-            if(HIGH_SCORE <= score){
-                print("You got the high score! High score: "+score);
-                HIGH_SCORE = score;
-                PlayerPrefs.SetInt("ProspectorHighScore", score);
-            }else{
-                print("Your final score for the game was: "+score);
-            }
-            break;
+                if(HIGH_SCORE <= score){
+                    print("You got the high score! High score: "+score);
+                    HIGH_SCORE = score;
+                    PlayerPrefs.SetInt("ProspectorHighScore", score);
+                }else{
+                    print("Your final score for the game was: "+score);
+                }
+                break;
 
             default:
-            print("score: "+score+" scoreRun:"+scoreRun+" chain:"+chain);
-            break;
+                break;
         }
+
+        print("evemt: "+evt+" score: "+score+" scoreRun:"+scoreRun+" chain:"+chain);
+
+        // Write back score
+        Scoreboard.S.score = score;
     }
 
     static public int CHAIN{get{return S.chain;}}
